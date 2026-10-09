@@ -603,7 +603,7 @@ img{display:block}
 
   /* hero: la cámara recorre los cuatro coches mientras cae la noche */
   .hero{min-height:560px !important;max-height:none !important}
-  .himg{object-position:calc(6% + var(--p) * 88%) 40% !important}
+  .himg{object-position:8% 40% !important}
   .hdr{padding-top:max(18px,env(safe-area-inset-top)) !important;padding-bottom:12px !important}
   .wm{letter-spacing:.34em;padding-left:.34em}
   .wm-metal,.wm-shine{padding-left:.34em}
@@ -1235,24 +1235,38 @@ class Component extends DCLogic {
       var k = e.deltaMode === 1 ? 32 : (e.deltaMode === 2 ? 700 : 1);
       this._advance(e.deltaY * k, e);
     };
-    this._onTouchStart = (e) => { this._touchY = e.touches && e.touches[0] ? e.touches[0].clientY : null; };
+    // táctil: un solo deslizamiento hace la noche (o vuelve al día) y se completa solo al soltar
+    this._touchDir = 0;
+    this._onTouchStart = (e) => { this._touchY = e.touches && e.touches[0] ? e.touches[0].clientY : null; this._touchDir = 0; };
     this._onTouchMove = (e) => {
       if (this._touchY === null || !e.touches || !e.touches[0]) return;
       var y = e.touches[0].clientY;
-      var dy = (this._touchY - y) * 1.9;
+      var dy = (this._touchY - y) * 4;
       this._touchY = y;
+      if (dy) this._touchDir = dy > 0 ? 1 : -1;
       this._advance(dy, e);
+    };
+    this._onTouchEnd = () => {
+      this._touchY = null;
+      if (this._t > 0 && this._t < 1 && this._touchDir) {
+        this._t = this._touchDir > 0 ? 1 : 0;
+        this._kick();
+      }
     };
     this._heroRef = (el) => {
       if (this._hero && this._hero !== el) {
         this._hero.removeEventListener('wheel', this._onWheel);
         this._hero.removeEventListener('touchstart', this._onTouchStart);
         this._hero.removeEventListener('touchmove', this._onTouchMove);
+        this._hero.removeEventListener('touchend', this._onTouchEnd);
+        this._hero.removeEventListener('touchcancel', this._onTouchEnd);
       }
       if (el && el !== this._hero) {
         el.addEventListener('wheel', this._onWheel, { passive: false });
         el.addEventListener('touchstart', this._onTouchStart, { passive: true });
         el.addEventListener('touchmove', this._onTouchMove, { passive: false });
+        el.addEventListener('touchend', this._onTouchEnd, { passive: true });
+        el.addEventListener('touchcancel', this._onTouchEnd, { passive: true });
       }
       this._hero = el;
     };
