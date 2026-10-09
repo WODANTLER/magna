@@ -604,6 +604,16 @@ img{display:block}
   /* hero: la cámara recorre los cuatro coches mientras cae la noche */
   .hero{min-height:560px !important;max-height:none !important}
   .himg{object-position:8% 40% !important}
+  /* logo en el cielo, sin filtros (Safari iOS los dibuja como recuadros) */
+  .hero-logo{top:calc(max(14px, env(safe-area-inset-top)) + 64px) !important}
+  .hero-logo .emerge{animation:emergeM 1.8s cubic-bezier(.16,.84,.3,1) both}
+  .hero-logo [role="img"],.hero-logo .wm{filter:none !important}
+  .hero-logo [role="img"]{width:88px !important}
+  .hero-logo .wm{margin-top:12px;font-size:36px;letter-spacing:.32em;padding-left:.32em}
+  .hero-logo .wm-metal,.hero-logo .wm-shine{padding-left:.32em}
+  .hero-logo .wm-sub{margin-top:9px !important;font-size:9px !important}
+  .hero-logo .halo{top:-70px;height:300px;width:120vw}
+  .hero-logo .aura{top:-80px;height:320px;width:120vw}
   .hdr{padding-top:max(18px,env(safe-area-inset-top)) !important;padding-bottom:12px !important}
   .wm{letter-spacing:.34em;padding-left:.34em}
   .wm-metal,.wm-shine{padding-left:.34em}
@@ -715,6 +725,7 @@ img{display:block}
 .swipe-hint{position:absolute;right:16px;bottom:44px;z-index:4;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.06em;color:#FFFFFF;background:rgba(14,34,70,.55);backdrop-filter:blur(10px);pointer-events:none;transition:opacity .5s}
 @keyframes sweepOnce{from{background-position:150% 0}to{background-position:-50% 0}}
 @keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+@keyframes emergeM{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 </style>
 </helmet>
 
@@ -745,7 +756,7 @@ img{display:block}
     </header>
 
     <!-- emblema + MAGNA -->
-    <div style="position: absolute; left: 0; right: 0; top: max(100px, 12vh); z-index: 3; display: flex; flex-direction: column; align-items: center; pointer-events: none">
+    <div class="hero-logo" style="position: absolute; left: 0; right: 0; top: max(100px, 12vh); z-index: 3; display: flex; flex-direction: column; align-items: center; pointer-events: none">
       <div class="halo" style="opacity: {{halo}}"></div>
       <div class="aura" style="opacity: {{aura}}"></div>
       <div class="emerge" style="position: relative; display: flex; flex-direction: column; align-items: center; transform: translateY({{logoY}}px) scale({{logoScale}})">
@@ -759,7 +770,7 @@ img{display:block}
           <span class="wm-t wm-metal" aria-hidden="true" style="opacity: {{metalOp}}">MAGNA</span>
           <span class="wm-t wm-shine {{loopCls}}" aria-hidden="true" style="opacity: {{shineOp}}; background-position: {{sweep}}% 0">MAGNA</span>
         </h1>
-        <span style="margin-top: 14px; padding-left: .9em; font-size: 10px; letter-spacing: .9em; font-weight: 600; text-transform: uppercase; color: {{inkFast}}; opacity: .9">Supercars</span>
+        <span class="wm-sub" style="margin-top: 14px; padding-left: .9em; font-size: 10px; letter-spacing: .9em; font-weight: 600; text-transform: uppercase; color: {{inkFast}}; opacity: .9">Supercars</span>
       </div>
     </div>
 
